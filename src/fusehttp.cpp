@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "HaDFS.h"
+#include "fusehttp.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,6 +1,6 @@
 // Hackaday RSS filesystem class implementation
 
-#include "HaDFS.h"
+#include "fusehttp.h"
 
 #include <iostream>
 #include <stdio.h>  // using popen
@@ -8,7 +8,7 @@
 #include <array>
 
 // include in one .cpp file
-#include "Fuse-impl.h"
+//#include "Fuse-impl.h"
 
 using namespace std;
 
