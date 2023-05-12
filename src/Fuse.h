@@ -36,7 +36,7 @@
 namespace Fusepp
 {
 	typedef int (*t_getattr)(const char *, struct stat *, struct fuse_file_info *);
-	typedef int (*t_readlink)(const char *, char *, size_t);
+	typedef int (*t_readlink)(const char *, char *, std::size_t);
 	typedef int (*t_mknod)(const char *, mode_t, dev_t);
 	typedef int (*t_mkdir)(const char *, mode_t);
 	typedef int (*t_unlink)(const char *);
@@ -48,18 +48,18 @@ namespace Fusepp
 	typedef int (*t_chown)(const char *, uid_t, gid_t, fuse_file_info *);
 	typedef int (*t_truncate)(const char *, off_t, fuse_file_info *);
 	typedef int (*t_open)(const char *, struct fuse_file_info *);
-	typedef int (*t_read)(const char *, char *, size_t, off_t,
+	typedef int (*t_read)(const char *, char *, std::size_t, off_t,
 												struct fuse_file_info *);
-	typedef int (*t_write)(const char *, const char *, size_t,
+	typedef int (*t_write)(const char *, const char *, std::size_t,
 												 off_t, struct fuse_file_info *);
 	typedef int (*t_statfs)(const char *, struct statvfs *);
 	typedef int (*t_flush)(const char *, struct fuse_file_info *);
 	typedef int (*t_release)(const char *, struct fuse_file_info *);
 	typedef int (*t_fsync)(const char *, int, struct fuse_file_info *);
 	typedef int (*t_setxattr)(const char *, const char *, const char *,
-														size_t, int);
-	typedef int (*t_getxattr)(const char *, const char *, char *, size_t);
-	typedef int (*t_listxattr)(const char *, char *, size_t);
+														std::size_t, int);
+	typedef int (*t_getxattr)(const char *, const char *, char *, std::size_t);
+	typedef int (*t_listxattr)(const char *, char *, std::size_t);
 	typedef int (*t_removexattr)(const char *, const char *);
 	typedef int (*t_opendir)(const char *, struct fuse_file_info *);
 	typedef int (*t_readdir)(const char *, void *, fuse_fill_dir_t, off_t,
@@ -74,7 +74,7 @@ namespace Fusepp
 												struct flock *);
 	typedef int (*t_utimens)(const char *, const struct timespec tv[2],
 													 struct fuse_file_info *fi);
-	typedef int (*t_bmap)(const char *, size_t blocksize, uint64_t *idx);
+	typedef int (*t_bmap)(const char *, std::size_t blocksize, uint64_t *idx);
 
 #if FUSE_USE_VERSION < 35
 	typedef int (*t_ioctl)(const char *, int cmd, void *arg,
@@ -88,7 +88,7 @@ namespace Fusepp
 	typedef int (*t_write_buf)(const char *, struct fuse_bufvec *buf, off_t off,
 														 struct fuse_file_info *);
 	typedef int (*t_read_buf)(const char *, struct fuse_bufvec **bufp,
-														size_t size, off_t off, struct fuse_file_info *);
+														std::size_t size, off_t off, struct fuse_file_info *);
 	typedef int (*t_flock)(const char *, struct fuse_file_info *, int op);
 	typedef int (*t_fallocate)(const char *, int, off_t, off_t,
 														 struct fuse_file_info *);

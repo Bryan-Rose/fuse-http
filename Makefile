@@ -3,7 +3,7 @@
 # Compiler and compiler flags
 CXX = gcc
 CXXFLAGS = -std=c++17 -Wall -Wextra #-pedantic 
-LDFLAGS = $(shell pkg-config fuse3 --libs)
+LDFLAGS = $(shell pkg-config fuse3 --libs) -lstdc++
 INCLUDES = -Iinclude $(shell pkg-config fuse3 --cflags)
  
 # Directories

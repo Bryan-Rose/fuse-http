@@ -12,7 +12,7 @@
 
 using namespace std;
 
-static const string root_path = "/";
+static const std::string root_path = "/";
 
 // Maximum number of topics
 #define MAXTOPIC ((unsigned long)128)
@@ -21,9 +21,9 @@ static unsigned topics = 0; // number of topics we've seen
 // Record for RSS item
 struct a_topic
 {
-  string title;   // title
-  string url;     // URL
-  string content; // content
+  std::string title;   // title
+  std::string url;     // URL
+  std::string content; // content
 };
 
 // Where the topics live
@@ -35,14 +35,14 @@ static char cmd[] = "curl https://hackaday.com/feed/ 2>/dev/null | egrep '(<titl
 // Trim RSS lines to kill leading spaces and the last </...> part
 // We are assuming the format will not have multiple things on one line
 // Although that isn't a great assumption
-static string trimrss(const string &str, const string &white1 = " \t\r\n", const string &white2 = "<")
+static std::string trimrss(const std::string &str, const std::string &white1 = " \t\r\n", const std::string &white2 = "<")
 {
-  size_t first, last;
+  std::size_t first, last;
   first = str.find_first_not_of(white1);
-  if (first == string::npos)
+  if (first == std::string::npos)
     return "";
   last = str.find_last_of(white2);
-  if (last == string::npos)
+  if (last == std::string::npos)
     last = str.length() - 1;
   else
     last--; // untested if there is no <...> at the end
@@ -52,8 +52,8 @@ static string trimrss(const string &str, const string &white1 = " \t\r\n", const
 // Find a path and return a file descriptor (can't be zero so we add 1 to it)
 int HaDFS::pathfind(const char *path)
 {
-  string s = path;
-  if (s.find_first_of('/') != string::npos)
+  std::string s = path;
+  if (s.find_first_of('/') != std::string::npos)
   {
     // no subdirectories
     return -1;
@@ -65,7 +65,7 @@ int HaDFS::pathfind(const char *path)
 }
 
 // Read the content or any URL for that matter
-static string readurl(string &url)
+static std::string readurl(std::string &url)
 {
   FILE *fp;
   char buf[1024]; // working buffer for reading strings
@@ -93,7 +93,7 @@ int HaDFS::userinit(void)
     return 1; // open pipe
   while (fgets(buf, sizeof(buf), fp))
   {
-    string line = buf;
+    std::string line = buf;
     line = trimrss(line);               // trim off extra stuff
     if (line.substr(0, 7) == "<title>") // identify line type and process
     {
@@ -157,9 +157,9 @@ int HaDFS::readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 // Fuse wants to open a file
 int HaDFS::open(const char *path, struct fuse_file_info *fi)
 {
-  string fn = path + 1; // skip leading /
+  std::string fn = path + 1; // skip leading /
   int n;
-  if (fn.find_first_of('/') != string::npos)
+  if (fn.find_first_of('/') != std::string::npos)
     return -ENOENT;                     // no sub dirs
   if ((n = pathfind(fn.c_str())) == -1) // find fd
     return -ENOENT;
@@ -176,12 +176,12 @@ int HaDFS::open(const char *path, struct fuse_file_info *fi)
 }
 
 // Fuse wants to read something
-int HaDFS::read(const char *path, char *buf, size_t size, off_t offset,
+int HaDFS::read(const char *path, char *buf, std::size_t size, off_t offset,
                 struct fuse_file_info *fi)
 {
-  size_t len;
+  std::size_t len;
   len = topic[fi->fh - 1].content.length(); // we get the length
-  if ((size_t)offset < len)                 // if the offset isn't past the end...
+  if ((std::size_t)offset < len)                 // if the offset isn't past the end...
   {
     if (offset + size > len)
       size = len - offset;
