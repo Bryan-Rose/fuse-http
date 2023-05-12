@@ -5,7 +5,7 @@
 
 #include "Fuse.h"
 
-//#include "Fuse-impl.h"
+#include "Fuse-impl.h"
 
 class HaDFS : public Fusepp::Fuse<HaDFS>
 {

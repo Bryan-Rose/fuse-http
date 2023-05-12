@@ -1,26 +1,35 @@
-IDIR=include
-CC=gcc
-CFLAGS=-I$(IDIR) -I/usr/include/fuse3 -Wall --std=c++17 
+# Makefile for a standard C++ project using gcc on Linux
 
-ODIR=obj
-LDIR=lib
-SDIR=src
+# Compiler and compiler flags
+CXX = gcc
+CXXFLAGS = -std=c++17 -Wall -Wextra #-pedantic 
+LDFLAGS = $(shell pkg-config fuse3 --libs)
+INCLUDES = -Iinclude $(shell pkg-config fuse3 --cflags)
+ 
+# Directories
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
 
-LIBS=-lm
+# Source files and object files
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+OBJS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SRCS))
 
-_DEPS = fusehttp.h Fuse.h
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+# Target executable
+TARGET = htfs
 
-_OBJ = fusehttp.o fusehttp-fs.o 
-OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+# Build rules
+all: $(TARGET)
 
-$(OBJ): $(ODIR)/%.o: $(SDIR)/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(TARGET): $(OBJS)
+	$(CXX) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^
 
-build: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	mkdir -p $(OBJDIR)
+	$(CXX) -o $@ $(CXXFLAGS) $(INCLUDES) -c $<
 
-.PHONY: clean
-
+# Clean rule
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ 
+	rm -rf $(OBJDIR) $(BINDIR)
+
+.PHONY: all clean
