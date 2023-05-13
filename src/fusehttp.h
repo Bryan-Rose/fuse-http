@@ -4,33 +4,27 @@
 #define __FUSEHAD_H_
 
 #include "Fuse.h"
-
+#include <fuse3/fuse.h>
 #include "Fuse-impl.h"
 
-class HaDFS : public Fusepp::Fuse<HaDFS>
+class FHTTP : public Fusepp::Fuse<FHTTP>
 {
 public:
-  HaDFS() {}
+  FHTTP() {}
 
-  ~HaDFS() {}
+  ~FHTTP() {}
 
-  static int getattr(const char*, struct stat*, struct fuse_file_info*);
+  static int getattr(const char *, struct stat *, struct fuse_file_info *);
 
-  static int readdir(const char* path, void* buf,
-    fuse_fill_dir_t filler,
-    off_t offset, struct fuse_file_info* fi,
-    enum fuse_readdir_flags);
+  static int readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi, enum fuse_readdir_flags);
 
-  static int open(const char* path, struct fuse_file_info* fi);
+  static int open(const char *path, struct fuse_file_info *fi);
 
-  static int read(const char* path, char* buf, std::size_t size, off_t offset,
-    struct fuse_file_info* fi);
+  static int read(const char *path, char *buf, std::size_t size, off_t offset, struct fuse_file_info *fi);
 
-  static int userinit(void);
+  static bool userinit(void);
 
-  static int pathfind(const char* path);
-
-
+  static int pathfind(const char *path);
 
 };
 

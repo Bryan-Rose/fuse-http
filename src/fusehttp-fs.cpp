@@ -2,17 +2,18 @@
 
 #include "fusehttp.h"
 
+#include <sys/stat.h>
 #include <iostream>
 #include <stdio.h> // using popen
 #include <string>
 #include <array>
 
 // include in one .cpp file
- #include "Fuse-impl.h"
+#include "Fuse-impl.h"
 
 using namespace std;
 
-static const std::string root_path = "/";
+static const string root_path = "/";
 
 // Maximum number of topics
 #define MAXTOPIC ((unsigned long)128)
@@ -30,7 +31,9 @@ struct a_topic
 array<a_topic, MAXTOPIC> topic;
 
 // The curl line to read our feed
-static char cmd[] = "curl https://hackaday.com/feed/ 2>/dev/null | egrep '(<title>)|(<link>)'";
+static char cmd[] = "curl --silent --user \"user6637:k3CC59Z6B0HXOmf\" \"https://user6637.emerald.usbx.me/files/tv/\" | grep --only-matching -P \"<a.+?>\"";
+
+
 
 // Trim RSS lines to kill leading spaces and the last </...> part
 // We are assuming the format will not have multiple things on one line
@@ -50,7 +53,7 @@ static std::string trimrss(const std::string &str, const std::string &white1 = "
 }
 
 // Find a path and return a file descriptor (can't be zero so we add 1 to it)
-int HaDFS::pathfind(const char *path)
+int FHTTP::pathfind(const char *path)
 {
   std::string s = path;
   if (s.find_first_of('/') != std::string::npos)
@@ -69,7 +72,7 @@ static std::string readurl(std::string &url)
 {
   FILE *fp;
   char buf[1024]; // working buffer for reading strings
-  string result, curl = "2>/dev/null curl '";
+  std::string result, curl = "2>/dev/null curl '";
   curl += url;
   curl += "'";
   if (!(fp = popen(curl.c_str(), "r")))
@@ -83,37 +86,8 @@ static std::string readurl(std::string &url)
   return result;
 }
 
-// User initialization--read the feed (note that init is reserved by the FUSE library)
-int HaDFS::userinit(void)
-{
-
-  FILE *fp;
-  char buf[1024]; // working buffer for reading strings
-  if (!(fp = popen(cmd, "r")))
-    return 1; // open pipe
-  while (fgets(buf, sizeof(buf), fp))
-  {
-    std::string line = buf;
-    line = trimrss(line);               // trim off extra stuff
-    if (line.substr(0, 7) == "<title>") // identify line type and process
-    {
-      topic[topics].title = line.substr(7);
-      topic[topics].title += ".html";
-    }
-    else if (line.substr(0, 6) == "<link>")
-    {
-      topic[topics].url = line.substr(6);
-      topics++;
-      if (topics == MAXTOPIC)
-        break; // quietly truncate a long feed
-    }
-  }
-  pclose(fp);
-  return 0;
-}
-
 // Fuse wants to stat our files
-int HaDFS::getattr(const char *path, struct stat *stbuf, struct fuse_file_info *)
+int FHTTP::getattr(const char *path, struct stat *stbuf, struct fuse_file_info *)
 {
   int res = 0, n;
   memset(stbuf, 0, sizeof(struct stat));
@@ -140,22 +114,21 @@ int HaDFS::getattr(const char *path, struct stat *stbuf, struct fuse_file_info *
 }
 
 // Fuse wants to read a directory
-int HaDFS::readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-                   off_t, struct fuse_file_info *, enum fuse_readdir_flags)
+int FHTTP::readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t, struct fuse_file_info *, enum fuse_readdir_flags)
 {
   if (path != root_path) // only root is valid
     return -ENOENT;
   // we always have . and ..
-  filler(buf, ".", NULL, 0, FUSE_FILL_DIR_PLUS);
-  filler(buf, "..", NULL, 0, FUSE_FILL_DIR_PLUS);
+  filler(buf, ".", nullptr, 0, FUSE_FILL_DIR_PLUS);
+  filler(buf, "..", nullptr, 0, FUSE_FILL_DIR_PLUS);
   // plus all of our "files"
   for (unsigned int i = 0; i < topics; i++)
-    filler(buf, topic[i].title.c_str(), NULL, 0, FUSE_FILL_DIR_PLUS);
+    filler(buf, topic[i].title.c_str(), nullptr, 0, FUSE_FILL_DIR_PLUS);
   return 0;
 }
 
 // Fuse wants to open a file
-int HaDFS::open(const char *path, struct fuse_file_info *fi)
+int FHTTP::open(const char *path, struct fuse_file_info *fi)
 {
   std::string fn = path + 1; // skip leading /
   int n;
@@ -176,12 +149,11 @@ int HaDFS::open(const char *path, struct fuse_file_info *fi)
 }
 
 // Fuse wants to read something
-int HaDFS::read(const char *path, char *buf, std::size_t size, off_t offset,
-                struct fuse_file_info *fi)
+int FHTTP::read(const char *path, char *buf, std::size_t size, off_t offset, struct fuse_file_info *fi)
 {
   std::size_t len;
   len = topic[fi->fh - 1].content.length(); // we get the length
-  if ((std::size_t)offset < len)                 // if the offset isn't past the end...
+  if ((std::size_t)offset < len)            // if the offset isn't past the end...
   {
     if (offset + size > len)
       size = len - offset;
@@ -190,4 +162,37 @@ int HaDFS::read(const char *path, char *buf, std::size_t size, off_t offset,
   else
     size = 0; // no data here
   return size;
+}
+
+
+// User initialization--read the feed (note that init is reserved by the FUSE library)
+bool FHTTP::userinit(void)
+{
+  FILE *fp;
+  char buf[1024]; // working buffer for reading strings
+  if (!(fp = popen(cmd, "r")))
+  {
+    return false; // open pipe
+  }
+
+  while (fgets(buf, sizeof(buf), fp))
+  {
+    std::string line = buf;
+    line = trimrss(line);               // trim off extra stuff
+    if (line.substr(0, 7) == "<title>") // identify line type and process
+    {
+      topic[topics].title = line.substr(7);
+      topic[topics].title += ".html";
+    }
+    else if (line.substr(0, 6) == "<link>")
+    {
+      topic[topics].url = line.substr(6);
+      topics++;
+      if (topics == MAXTOPIC)
+        break; // quietly truncate a long feed
+    }
+  }
+
+  pclose(fp);
+  return true;
 }

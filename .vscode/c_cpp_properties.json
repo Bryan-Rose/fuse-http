@@ -5,14 +5,12 @@
             "includePath": [
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/lib",
-                "/usr/include/**",
-                "/usr/include/fuse3/**"
+                "/usr/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "cppStandard": "c++17"
         }
     ],
     "version": 4

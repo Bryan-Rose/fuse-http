@@ -48,32 +48,26 @@ namespace Fusepp
 	typedef int (*t_chown)(const char *, uid_t, gid_t, fuse_file_info *);
 	typedef int (*t_truncate)(const char *, off_t, fuse_file_info *);
 	typedef int (*t_open)(const char *, struct fuse_file_info *);
-	typedef int (*t_read)(const char *, char *, std::size_t, off_t,
-												struct fuse_file_info *);
-	typedef int (*t_write)(const char *, const char *, std::size_t,
-												 off_t, struct fuse_file_info *);
+	typedef int (*t_read)(const char *, char *, std::size_t, off_t, struct fuse_file_info *);
+	typedef int (*t_write)(const char *, const char *, std::size_t, off_t, struct fuse_file_info *);
 	typedef int (*t_statfs)(const char *, struct statvfs *);
 	typedef int (*t_flush)(const char *, struct fuse_file_info *);
 	typedef int (*t_release)(const char *, struct fuse_file_info *);
 	typedef int (*t_fsync)(const char *, int, struct fuse_file_info *);
-	typedef int (*t_setxattr)(const char *, const char *, const char *,
-														std::size_t, int);
+	typedef int (*t_setxattr)(const char *, const char *, const char *, std::size_t, int);
 	typedef int (*t_getxattr)(const char *, const char *, char *, std::size_t);
 	typedef int (*t_listxattr)(const char *, char *, std::size_t);
 	typedef int (*t_removexattr)(const char *, const char *);
 	typedef int (*t_opendir)(const char *, struct fuse_file_info *);
-	typedef int (*t_readdir)(const char *, void *, fuse_fill_dir_t, off_t,
-													 struct fuse_file_info *, enum fuse_readdir_flags);
+	typedef int (*t_readdir)(const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *, enum fuse_readdir_flags);
 	typedef int (*t_releasedir)(const char *, struct fuse_file_info *);
 	typedef int (*t_fsyncdir)(const char *, int, struct fuse_file_info *);
 	typedef void *(*t_init)(struct fuse_conn_info *, struct fuse_config *cfg);
 	typedef void (*t_destroy)(void *);
 	typedef int (*t_access)(const char *, int);
 	typedef int (*t_create)(const char *, mode_t, struct fuse_file_info *);
-	typedef int (*t_lock)(const char *, struct fuse_file_info *, int cmd,
-												struct flock *);
-	typedef int (*t_utimens)(const char *, const struct timespec tv[2],
-													 struct fuse_file_info *fi);
+	typedef int (*t_lock)(const char *, struct fuse_file_info *, int cmd, struct flock *);
+	typedef int (*t_utimens)(const char *, const struct timespec tv[2], struct fuse_file_info *fi);
 	typedef int (*t_bmap)(const char *, std::size_t blocksize, uint64_t *idx);
 
 #if FUSE_USE_VERSION < 35
@@ -81,17 +75,12 @@ namespace Fusepp
 #else
 	typedef int (*t_ioctl)(const char *, unsigned int cmd, void *arg,
 #endif
-												 struct fuse_file_info *, unsigned int flags,
-												 void *data);
-	typedef int (*t_poll)(const char *, struct fuse_file_info *,
-												struct fuse_pollhandle *ph, unsigned *reventsp);
-	typedef int (*t_write_buf)(const char *, struct fuse_bufvec *buf, off_t off,
-														 struct fuse_file_info *);
-	typedef int (*t_read_buf)(const char *, struct fuse_bufvec **bufp,
-														std::size_t size, off_t off, struct fuse_file_info *);
+						   struct fuse_file_info *, unsigned int flags, void *data);
+	typedef int (*t_poll)(const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
+	typedef int (*t_write_buf)(const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
+	typedef int (*t_read_buf)(const char *, struct fuse_bufvec **bufp, std::size_t size, off_t off, struct fuse_file_info *);
 	typedef int (*t_flock)(const char *, struct fuse_file_info *, int op);
-	typedef int (*t_fallocate)(const char *, int, off_t, off_t,
-														 struct fuse_file_info *);
+	typedef int (*t_fallocate)(const char *, int, off_t, off_t, struct fuse_file_info *);
 
 	template <class T>
 	class Fuse

@@ -3,11 +3,12 @@
 #include "fusehttp.h"
 
 int main(int argc, char* argv[]) {
-  HaDFS fs;
+  FHTTP fs;
   if (fs.userinit()) {
     fprintf(stderr, "Can't fetch feed\n");
     return 99;
-  };
+  }
+
   int status;
   status = fs.run(argc, argv);
 
