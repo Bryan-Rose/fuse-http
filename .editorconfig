@@ -8,3 +8,4 @@ function_definition_return_type_style=on_single_line
 toplevel_function_definition_return_type_style=on_single_line
 keep_user_linebreaks=false
 max_line_length=140
+cpp_space_pointer_reference_alignment=left

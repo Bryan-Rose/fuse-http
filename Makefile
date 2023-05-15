@@ -2,9 +2,9 @@
 
 # Compiler and compiler flags
 CXX = gcc
-CXXFLAGS = -std=c++17 -Wall -Wextra #-pedantic 
-LDFLAGS = $(shell pkg-config fuse3 --libs) -lstdc++
-INCLUDES = -Iinclude $(shell pkg-config fuse3 --cflags)
+CXXFLAGS = -std=c++17 -Wall -Wextra -g
+INCLUDES = -Iinclude $(shell pkgconf fuse3 --cflags)
+LDFLAGS = $(shell pkgconf fuse3 --libs) $(shell pkgconf --libs libcurl) -lstdc++
  
 # Directories
 SRCDIR = src
@@ -22,7 +22,7 @@ TARGET = htfs
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^
+	$(CXX) -o bin/$(TARGET) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	mkdir -p $(OBJDIR)
