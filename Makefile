@@ -22,10 +22,10 @@ TARGET = htfs
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) -o bin/$(TARGET) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^
+	$(CXX) -o $(BINDIR)/$(TARGET) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	mkdir -p $(OBJDIR)
+	mkdir -p $(OBJDIR) $(BINDIR)
 	$(CXX) -o $@ $(CXXFLAGS) $(INCLUDES) -c $<
 
 # Clean rule

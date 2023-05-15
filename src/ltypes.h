@@ -8,6 +8,6 @@ struct HFile
     std::string Url;
     std::string Filename;
     tm Timestamp;
-    int SizeBytes;
+    long SizeBytes;
     bool IsFile;
 };

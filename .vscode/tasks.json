@@ -15,7 +15,6 @@
         {
             "group": {
                 "kind": "build",
-                "isDefault": true
             },
             "label": "Clean & Build",
             "type": "shell",

@@ -9,7 +9,7 @@
 
 
 // Def
-void parse_single(HFile* record, std::smatch matchResult);
+void parse_single(HFile* record, std::string url, std::string ts, std::string size);
 std::string util_getFileName(std::string url);
 // Def
 
@@ -25,6 +25,7 @@ std::string util_getFileName(std::string url) {
   return r;
 }
 
+typedef std::regex_token_iterator<const char*> Myiter;
 
 void util_parseAll(std::string body, std::vector<HFile*>* records)
 {
@@ -33,56 +34,36 @@ void util_parseAll(std::string body, std::vector<HFile*>* records)
   // 2 - bytes
   // <a href="Jeopardy.2023.05.09.720p.HDTV.x264.AC3.mkv">Jeopardy.2023.05.09.720p.HDTV.x264.AC3.mkv</a>         10-May-2023 06:11           410576237
   const std::regex pattern("<a href=\"(.+?)\">.+?</?a> +(.+?) {2,}(.+)");
-  
-  std::smatch matchResult;
 
-  while (std::regex_search(body, matchResult, pattern)) {
+  const int subgroups[] = { 1,2,3 };
+  std::regex_token_iterator<std::string::iterator> c(body.begin(), body.end(), pattern, subgroups);
+  std::regex_token_iterator<std::string::iterator> rend;
+  std::string matches[3];
+
+  while (c != rend) {
+    for (int i = 0; i < 3 && c != rend; i++) {
+      auto a = *c++;
+      matches[i] = a.str();
+    }
+
     auto hf = new HFile();
-    parse_single(hf, matchResult);
+    parse_single(hf, matches[0], matches[1], matches[2]);
     records->push_back(hf);
   }
 }
 
-void parse_single(HFile* record, std::smatch matchResult) {
-  record->SizeBytes = stoi(matchResult[3].str());
-  const auto url = matchResult[1].str();
+
+void parse_single(HFile* record, std::string url, std::string ts, std::string size) {
+  record->SizeBytes = stol(size);
   record->Url = url;
   record->Filename = util_getFileName(url);
-  record->IsFile = record->Filename.back() == '/';
+  record->IsFile = record->Filename.back() != '/';
 
-  std::istringstream dStr(matchResult[2].str());
+  std::istringstream dStr(ts);
   tm* tmPtr = &((*record).Timestamp);
   // 13-May-2023 06:46
   dStr >> std::get_time(tmPtr, "%d-%b-%Y %R");
 }
-
-// void util_parse(std::string body, HFile* record)
-// {
-//   std::smatch matchResult;
-
-//   // 0 - url
-//   // 1 - timestampe
-//   // 2 - bytes
-//   // <a href="Jeopardy.2023.05.09.720p.HDTV.x264.AC3.mkv">Jeopardy.2023.05.09.720p.HDTV.x264.AC3.mkv</a>         10-May-2023 06:11           410576237
-//   const std::regex pattern("<a href=\"(.+?)\">.+?</?a> +(.+?) {2,}(.+)");
-//   auto isMatch = std::regex_search(body, matchResult, pattern);
-//   if (isMatch == false || matchResult.ready() == false)
-//   {
-//     return;
-//   }
-
-//   record->SizeBytes = stoi(matchResult[2].str());
-//   const auto url = matchResult[0].str();
-//   record->Url = url;
-//   record->Filename = util_getFileName(url);
-//   record->IsFile = record->Filename.back() == '/';
-
-//   std::istringstream dStr(matchResult[1].str());
-//   tm* tmPtr = &((*record).Timestamp);
-//   // 13-May-2023 06:46
-//   dStr >> std::get_time(tmPtr, "%d-%b-%Y %R");
-// }
-
 
 bool util_readProcess(char* cmd, std::string* output) {
   FILE* fp;
@@ -95,7 +76,7 @@ bool util_readProcess(char* cmd, std::string* output) {
 
   while (fgets(buf, sizeof(buf), fp))
   {
-    output->append(buf, sizeof(buf));
+    output->append(buf);
   }
   pclose(fp);
 
