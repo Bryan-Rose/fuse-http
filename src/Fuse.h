@@ -23,8 +23,7 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __FUSE_APP_H__
-#define __FUSE_APP_H__
+#pragma once
 
 #ifndef FUSE_USE_VERSION
 #define FUSE_USE_VERSION 35
@@ -201,4 +200,3 @@ namespace Fusepp
 	};
 };
 
-#endif

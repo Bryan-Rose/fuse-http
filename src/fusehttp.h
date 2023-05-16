@@ -1,7 +1,6 @@
 // Hackaday filesystem class definition
 
-#ifndef __FUSEHAD_H_
-#define __FUSEHAD_H_
+#pragma once
 
 #include "Fuse.h"
 #include <fuse3/fuse.h>
@@ -25,9 +24,4 @@ public:
   static bool userinit(void);
 
   static int pathfind(const char* path);
-
 };
-
-bool userTest(void);
-
-#endif

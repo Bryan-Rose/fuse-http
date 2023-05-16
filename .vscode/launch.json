@@ -5,11 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "launch",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/htfs",
             "args": [],
+            "envFile": "${workspaceFolder}/.env",
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

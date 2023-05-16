@@ -23,9 +23,6 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __FUSE_IMPL_CPP__
-#define __FUSE_IMPL_CPP__
+#pragma once
 
 #include "Fuse.cpp"
-
-#endif

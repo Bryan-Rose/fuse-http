@@ -5,7 +5,8 @@
 
 struct HFile
 {
-    std::string Url;
+    std::string FullUrl;
+    std::string EncodedFileName;
     std::string Filename;
     tm Timestamp;
     long SizeBytes;

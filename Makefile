@@ -2,7 +2,7 @@
 
 # Compiler and compiler flags
 CXX = gcc
-CXXFLAGS = -std=c++17 -Wall -Wextra -g
+CXXFLAGS = -std=c++17 -Wall -Wextra -g -D DEBUG
 INCLUDES = -Iinclude $(shell pkgconf fuse3 --cflags)
 LDFLAGS = $(shell pkgconf fuse3 --libs) $(shell pkgconf --libs libcurl) -lstdc++
  
