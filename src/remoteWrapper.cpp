@@ -13,7 +13,7 @@
 
 // Def
 void parseSingle(HFile* record, std::string url, std::string ts, std::string size);
-void parseAll(std::string body, std::vector<HFile*>* records);
+void parseAll(std::string body, std::vector<HFile*>& records);
 std::string util_getFileName(std::string url);
 bool readProcess(const char* cmd, std::string* output);
 std::string pathJoin(std::vector<std::string> segments);
@@ -27,13 +27,13 @@ RemoteWrapper::RemoteWrapper(std::string user, std::string password, std::string
 
 RemoteWrapper::~RemoteWrapper() { }
 
-void RemoteWrapper::PullAndRead(std::string subDir, std::vector<HFile*>* files) {
+void RemoteWrapper::PullAndRead(std::string subDir, std::vector<HFile*>& files) {
     auto cmd = this->build_command(subDir);
     std::string html;
     readProcess(cmd.c_str(), &html);
     parseAll(html, files);
 
-    for (auto f : (*files)) {
+    for (auto f : files) {
         f->FullUrl = pathJoin(std::vector<std::string>{
             this->urlBase,
                 subDir,
@@ -85,7 +85,7 @@ std::string util_getFileName(std::string url) {
     return r;
 }
 
-void parseAll(std::string body, std::vector<HFile*>* records)
+void parseAll(std::string body, std::vector<HFile*>& records)
 {
     // 0 - url
     // 1 - timestampe
@@ -106,10 +106,9 @@ void parseAll(std::string body, std::vector<HFile*>* records)
 
         auto hf = new HFile();
         parseSingle(hf, matches[0], matches[1], matches[2]);
-        records->push_back(hf);
+        records.push_back(hf);
     }
 }
-
 
 void parseSingle(HFile* record, std::string url, std::string ts, std::string size) {
     record->EncodedFileName = url;

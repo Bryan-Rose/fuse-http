@@ -23,7 +23,7 @@ int run_print(Args args) {
   RemoteWrapper rw(args.user, args.password, args.urlBase);
   std::cout << "Printing" << std::endl;
   std::vector<HFile*> files;
-  rw.PullAndRead("", &files);
+  rw.PullAndRead("", files);
   for (const auto f : files) {
     std::cout << "Filename: " << f->Filename << std::endl
       << "Type: " << (f->IsFile ? "File" : "Folder") << std::endl
@@ -39,6 +39,7 @@ int run_mount(Args args) {
   std::cout << "unsupported" << std::endl;
   // bool success = userTest();
   // return success ? 0 : 1;
+  return 1;
 }
 
 int main(int argc, char* argv[]) {
@@ -78,9 +79,10 @@ int main(int argc, char* argv[]) {
   }
   else if (sargs.size() == 4) {
     Args a{
-    .user = sargs[1],
+      .user = sargs[1],
       .password = sargs[2],
       .urlBase = sargs[3],
+      .mountPoint = nullptr
     };
     return run_print(a);
   }

@@ -1,3 +1,5 @@
+#if FALSE
+
 // Hackaday filesystem class definition
 
 #pragma once
@@ -25,3 +27,5 @@ public:
 
   static int pathfind(const char* path);
 };
+
+#endif

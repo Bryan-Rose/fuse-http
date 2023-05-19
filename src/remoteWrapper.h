@@ -7,10 +7,11 @@
 
 class RemoteWrapper {
 public:
+    RemoteWrapper() {};
     RemoteWrapper(std::string user, std::string password, std::string urlBase);
     ~RemoteWrapper();
 
-    void PullAndRead(std::string subDir, std::vector<HFile*>* files);
+    void PullAndRead(std::string subDir, std::vector<HFile*>& files);
 
 private:
     std::string user;

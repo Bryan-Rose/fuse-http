@@ -1,3 +1,5 @@
+#if FALSE
+
 // Hackaday RSS filesystem class implementation
 
 #include <sys/stat.h>
@@ -167,25 +169,4 @@ int FHTTP::read(const char* path, char* buf, std::size_t size, off_t offset, str
   return size;
 }
 
-
-// bool userTest()
-// {
-//   std::string fullResponse;
-//   std::vector<HFile*> hFiles;
-
-//   if (util_readProcess(cmd, &fullResponse) == false) {
-//     cout << "Process read failed" << endl;
-//     return false;
-//   }
-
-//   util_parseAll(fullResponse, &hFiles);
-//   for (auto x : hFiles) {
-//     cout << x->Filename << endl
-//       << x->Url << endl
-//       << x->IsFile << endl
-//       << x->Timestamp.tm_mday << endl
-//       << x->SizeBytes << endl;
-//   }
-
-//   return true;
-// }
+#endif
